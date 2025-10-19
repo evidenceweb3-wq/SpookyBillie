@@ -2,75 +2,87 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Billy Fall Switcher + Mobile Optimized</title>
+<title>Billy Fall Switcher + Mask + Color Mask + Leaves + Dual Scenes + Hats</title>
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: sans-serif;
+body {
   background: #111;
-  color: #fff;
   display: flex;
   flex-direction: column;
-}
-
-body {
+  align-items: center;
   justify-content: flex-start;
+  margin: 0;
+  font-family: sans-serif;
+  height: 100vh;
 }
 
 #container {
   position: relative;
-  width: 100%;
-  flex: 1 1 auto; /* Fill available height */
-  max-height: 100%;
+  width: 90vmin;
+  height: 90vmin;
+  max-width: 90vw;
+  max-height: 90vw;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
 canvas {
   width: 100%;
   height: 100%;
+  border-radius: 10px;
   display: block;
 }
 
-.controlsWrapper {
+.containerButtons {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
-  flex: 0 0 auto;
+  gap: 8px;
 }
 
-.controlsWrapper button {
-  flex: 1;
-  padding: 14px;
+.containerButtons button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+}
+
+.controls, .secondaryControls {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  width: 90vmin;
+  max-width: 90vw;
+}
+
+.controls button, .secondaryControls button {
+  flex: 1 1 30%;
+  padding: 8px 0;
+  border-radius: 6px;
   border: none;
   font-weight: bold;
   cursor: pointer;
   background: white;
   color: black;
-  border-radius: 6px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
 }
 
 @media(max-width:600px){
-  #container {
-    height: 60vh; /* Adjust height on mobile for better fit */
-  }
-
-  .controlsWrapper {
-    flex-direction: column;
-    gap: 4px;
-    padding: 4px;
-  }
-
-  .controlsWrapper button {
-    width: 100%;
-  }
+  #container { width: 100vw; height: 100vw; margin-top:0; }
+  .controls, .secondaryControls { width: 100vw; flex-direction: column; }
+  .controls button, .secondaryControls button { flex: 1 1 100%; }
+  .containerButtons { flex-direction: column; gap: 6px; }
 }
 </style>
 </head>
@@ -78,22 +90,26 @@ canvas {
 
 <div id="container">
   <canvas id="canvas"></canvas>
+  <div class="containerButtons">
+    <button id="randomBtn">🎲 Random</button>
+    <button id="leavesBtn">🍂 Leaves</button>
+  </div>
 </div>
 
-<div class="controlsWrapper">
-  <button id="randomBtn">🎲 Random</button>
-  <button id="leavesBtn">🍂 Leaves</button>
+<div class="controls">
   <button id="bgButton">Background</button>
+  <input type="color" id="bgColor" value="#ffffff" style="display:none;">
   <button id="colorMaskButton">Billie Color</button>
+  <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
   <button id="sceneBtn">🎬 Scene</button>
   <button id="save">Save PNG</button>
+</div>
+
+<div class="secondaryControls">
   <button id="hornBtn">Horns</button>
   <button id="hatBtn">Hats</button>
   <button id="glassesBtn">Glasses</button>
 </div>
-
-<input type="color" id="bgColor" value="#ffffff" style="display:none;">
-<input type="color" id="colorMask" value="#ffcc99" style="display:none;">
 
 <script>
 const canvas = document.getElementById('canvas');
