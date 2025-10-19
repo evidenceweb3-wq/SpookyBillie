@@ -4,31 +4,33 @@
 <meta charset="UTF-8">
 <title>Billy Fall Switcher + Mask + Color Mask + Leaves + Dual Scenes + Hats</title>
 <style>
-body {
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: sans-serif;
   background: #111;
+  color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin: 0;
-  font-family: sans-serif;
-  color: #fff;
-  height: 100vh; /* force viewport height */
-  overflow: hidden; /* no scrolling on desktop */
+  justify-content: space-between; /* top buttons at top, bottom at bottom */
+  overflow: hidden;
 }
 
 #topButtons, #bottomButtons {
   display: flex;
-  width: 90%;
+  width: 100%;
   max-width: 800px;
-  justify-content: space-between;
-  margin: 5px 0;
   gap: 5px;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
 #topButtons button, #bottomButtons button {
   flex: 1;
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
   border: none;
   font-weight: bold;
@@ -39,14 +41,16 @@ body {
 }
 
 #container {
+  position: relative;
+  width: 90vmin;
+  height: 90vmin; /* always square */
+  max-width: 800px;
+  max-height: 800px;
   background: #fff;
   border-radius: 10px;
-  width: 90%;
-  max-width: 800px;
-  height: 90%;
-  max-height: 800px;
-  overflow: hidden;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 canvas {
@@ -73,12 +77,10 @@ input[type=color] {
   display: none;
 }
 
-/* Mobile: stack buttons and fill width */
+/* Mobile: stack buttons at top and bottom filling width */
 @media (max-width: 600px) {
   body {
-    flex-direction: column;
-    justify-content: flex-start; /* container at top */
-    height: auto;
+    justify-content: center; /* center container */
   }
   #topButtons, #bottomButtons {
     flex-direction: column;
@@ -88,12 +90,12 @@ input[type=color] {
     margin: 5px 0;
   }
   #container {
-    width: 95%;
-    height: 60vmin;
-    max-height: 400px;
+    width: 90vmin;
+    height: 90vmin; /* square */
   }
 }
 </style>
+
 
 </head>
 <body>
