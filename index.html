@@ -9,8 +9,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+  justify-content: flex-start;
   margin: 0;
   font-family: sans-serif;
 }
@@ -24,6 +23,7 @@ body {
   width: 90vmin;
   height: 90vmin;
   overflow: hidden;
+  margin-top: 10px;
 }
 canvas {
   display: block;
@@ -31,23 +31,49 @@ canvas {
   height: 100%;
   border-radius: 10px;
 }
-.arrow {
+
+/* Mobile stacked buttons at top of container */
+.asset-buttons-mobile {
   position: absolute;
-  font-size: 32px;
-  background: rgba(255,255,255,0.8);
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+.asset-buttons-mobile button {
+  padding: 10px 16px;
+  font-weight: bold;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 6px;
-  z-index: 5;
+  background: white;
+  color: black;
+  transition: all 0.2s ease;
 }
-.arrow.left { left: 10px; top: 50%; transform: translateY(-50%); }
-.arrow.right { right: 10px; top: 50%; transform: translateY(-50%); }
-.arrow.mask-left { left: 10px; bottom: 5%; transform: translateY(0); }
-.arrow.mask-right { right: 10px; bottom: 5%; transform: translateY(0); }
-.arrow.hat-left { left: 10px; top: 10%; transform: translateY(0); }
-.arrow.hat-right { right: 10px; top: 10%; transform: translateY(0); }
 
+/* Desktop buttons inside controls row */
+.controls {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.controls button {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background: white;
+  color: black;
+  transition: all 0.2s ease;
+}
+
+/* Random and leaves buttons on top corners of container */
 #randomBtn, #leavesBtn {
   position: absolute;
   top: 10px;
@@ -62,41 +88,29 @@ canvas {
 #randomBtn { right: 10px; }
 #leavesBtn { left: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
 
-.controls {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.controls button {
-  padding: 8px 12px;
-  cursor: pointer;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  background: white;
-  color: black;
-  transition: all 0.2s ease;
+/* Responsive mobile adjustments */
+@media (max-width: 768px) {
+  .controls .asset-desktop { display: none; }
 }
 </style>
 </head>
 <body>
 
 <div id="container">
-  <button class="arrow left" id="prevBase">&#8592;</button>
   <canvas id="canvas"></canvas>
-  <button class="arrow right" id="nextBase">&#8594;</button>
 
-  <button class="arrow mask-left" id="prevMask">&#8592;</button>
-  <button class="arrow mask-right" id="nextMask">&#8594;</button>
-
-  <button class="arrow hat-left" id="prevHat">&#8592;</button>
-  <button class="arrow hat-right" id="nextHat">&#8594;</button>
+  <!-- Mobile buttons stacked vertically -->
+  <div class="asset-buttons-mobile">
+    <button id="hornsBtnMobile">HORNS</button>
+    <button id="hatBtnMobile">HAT</button>
+    <button id="glassesBtnMobile">GLASSES</button>
+  </div>
 
   <button id="randomBtn">🎲 Random</button>
   <button id="leavesBtn">🍂 Leaves</button>
 </div>
-  
+
+<!-- Bottom controls for desktop -->
 <div class="controls">
   <button id="bgButton">Background</button>
   <input type="color" id="bgColor" value="#ffffff" style="display:none;">
@@ -104,13 +118,18 @@ canvas {
   <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
   <button id="sceneBtn">🎬 Scene</button>
   <button id="save">Save PNG</button>
+
+  <!-- Desktop HORNS/HAT/GLASSES buttons -->
+  <button class="asset-desktop" id="hornsBtnDesktop">HORNS</button>
+  <button class="asset-desktop" id="hatBtnDesktop">HAT</button>
+  <button class="asset-desktop" id="glassesBtnDesktop">GLASSES</button>
 </div>
 
 <script>
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-// BASES
+// BASES (HORNS)
 const baseSources = [
   "https://i.postimg.cc/KYTmT02j/BillyFallBase3.png",
   "https://i.postimg.cc/fLKn7Fq6/Horn2.png"
@@ -118,7 +137,7 @@ const baseSources = [
 const bases = [];
 let currentBase = 0;
 
-// MASKS
+// MASKS (GLASSES)
 const maskSources = [
   null,
   "https://i.postimg.cc/5NWYLjj2/Mask-Pumpking3.png",
@@ -249,7 +268,6 @@ function render(){
   if(masks[currentMask] && !skeletesActive)
     ctx.drawImage(masks[currentMask],0,yOffset,naturalW,naturalH);
 
-  // 🎩 HATS ALWAYS ON TOP
   if(hats[currentHat]) ctx.drawImage(hats[currentHat],0,yOffset,naturalW,naturalH);
 }
 
@@ -272,17 +290,30 @@ function drawLeaves(){
 
 function animate(){ render(); requestAnimationFrame(animate); }
 
-// BUTTONS
-document.getElementById('prevBase').onclick=()=>{currentBase=(currentBase-1+bases.length)%bases.length;render();};
-document.getElementById('nextBase').onclick=()=>{currentBase=(currentBase+1)%bases.length;render();};
-document.getElementById('prevMask').onclick=()=>{currentMask=(currentMask-1+masks.length)%masks.length;render();};
-document.getElementById('nextMask').onclick=()=>{currentMask=(currentMask+1)%masks.length;render();};
-document.getElementById('prevHat').onclick=()=>{currentHat=(currentHat-1+hats.length)%hats.length;render();};
-document.getElementById('nextHat').onclick=()=>{currentHat=(currentHat+1)%hats.length;render();};
+// BUTTON HANDLERS
+const hornBtns = [document.getElementById('hornsBtnMobile'), document.getElementById('hornsBtnDesktop')];
+hornBtns.forEach(btn => btn.onclick = () => { currentBase = (currentBase + 1) % bases.length; render(); });
+
+const hatBtns = [document.getElementById('hatBtnMobile'), document.getElementById('hatBtnDesktop')];
+hatBtns.forEach(btn => btn.onclick = () => { currentHat = (currentHat + 1) % hats.length; render(); });
+
+const glassesBtns = [document.getElementById('glassesBtnMobile'), document.getElementById('glassesBtnDesktop')];
+glassesBtns.forEach(btn => btn.onclick = () => { currentMask = (currentMask + 1) % masks.length; render(); });
+
+document.getElementById('randomBtn').onclick=()=>{
+  currentBase=Math.floor(Math.random()*bases.length);
+  currentMask=Math.floor(Math.random()*masks.length);
+  currentHat=Math.floor(Math.random()*hats.length);
+  const hueMask=Math.floor(Math.random()*360);
+  colorMaskColor=`hsl(${hueMask},60%,60%)`;
+  colorMaskBtn.style.background=colorMaskColor;
+  render();
+};
+
+document.getElementById('leavesBtn').onclick=()=>{showLeaves=!showLeaves;if(showLeaves)initParticles();};
 
 const bgBtn=document.getElementById('bgButton');
 const bgColorInput=document.getElementById('bgColor');
-const sceneBtn=document.getElementById('sceneBtn');
 bgBtn.onclick=()=>bgColorInput.click();
 bgColorInput.oninput=(e)=>{
   bgColor=e.target.value;
@@ -298,18 +329,7 @@ const colorMaskInput=document.getElementById('colorMask');
 colorMaskBtn.onclick=()=>colorMaskInput.click();
 colorMaskInput.oninput=(e)=>{colorMaskColor=e.target.value;colorMaskBtn.style.background=colorMaskColor;colorMaskBtn.style.color=getTextColor(colorMaskColor);render();};
 
-document.getElementById('randomBtn').onclick=()=>{
-  currentBase=Math.floor(Math.random()*bases.length);
-  currentMask=Math.floor(Math.random()*masks.length);
-  currentHat=Math.floor(Math.random()*hats.length);
-  const hueMask=Math.floor(Math.random()*360);
-  colorMaskColor=`hsl(${hueMask},60%,60%)`;
-  colorMaskBtn.style.background=colorMaskColor;
-  render();
-};
-
-document.getElementById('leavesBtn').onclick=()=>{showLeaves=!showLeaves;if(showLeaves)initParticles();};
-
+const sceneBtn=document.getElementById('sceneBtn');
 sceneBtn.onclick=()=>{
   currentScene=(currentScene+1)%(sceneImgs.length+1);
   if(currentScene===sceneImgs.length){
