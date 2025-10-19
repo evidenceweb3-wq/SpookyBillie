@@ -88,15 +88,19 @@ canvas {
     width: 100%;
     height: calc(100vh - 100vw); /* fill remaining space */
     margin: 0;
+    display: flex;
+    justify-content: space-between; /* evenly space buttons */
+    padding: 5px;
+    box-sizing: border-box;
   }
 
   .controls button,
   .controls input[type="color"] {
     flex: 1; /* all buttons fill equally vertical space */
     width: 100%;
-    margin: 0;
+    margin: 2px 0; /* space between each button */
     font-size: 1.2em;
-    border-radius: 0;
+    border-radius: 8px;
   }
 }
 </style>
