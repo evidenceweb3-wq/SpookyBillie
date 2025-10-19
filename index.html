@@ -15,6 +15,7 @@ body {
   height: 100vh;
 }
 
+/* Desktop container */
 #container {
   position: relative;
   width: 90vmin;
@@ -37,6 +38,7 @@ canvas {
   display: block;
 }
 
+/* Desktop buttons layout */
 .containerButtons {
   position: absolute;
   bottom: 10px;
@@ -78,11 +80,46 @@ canvas {
   transition: all 0.2s ease;
 }
 
+/* Mobile adjustments */
 @media(max-width:600px){
-  #container { width: 100vw; height: 100vw; margin-top:0; }
-  .controls, .secondaryControls { width: 100vw; flex-direction: column; }
-  .controls button, .secondaryControls button { flex: 1 1 100%; }
-  .containerButtons { flex-direction: column; gap: 6px; }
+  body {
+    justify-content: flex-start;
+  }
+
+  #container {
+    width: 100vw;
+    height: 60vh; /* Adjust container height */
+    margin-top: 0;
+  }
+
+  .containerButtons {
+    position: static;
+    transform: none;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 4px;
+    width: 100%;
+  }
+
+  /* Stack all buttons to fill the bottom */
+  .controls, .secondaryControls {
+    flex-direction: column;
+    width: 100%;
+    flex: 1; /* Grow to fill remaining space */
+    margin: 0;
+    padding: 0;
+  }
+
+  .controls button, .secondaryControls button {
+    flex: 1 1 auto; /* Each button fills available space */
+    width: 100%;
+    margin: 0;
+  }
+
+  /* Wrap everything at bottom in a wrapper */
+  body {
+    justify-content: flex-start;
+  }
 }
 </style>
 </head>
