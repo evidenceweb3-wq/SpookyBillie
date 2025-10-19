@@ -76,19 +76,22 @@ canvas {
     height: 60vmin;
   }
   .controls {
-    flex-direction: column;      /* stack vertically */
+    display: flex !important;        /* ensure flex applied */
+    flex-direction: column !important; /* stack vertically */
     width: 100%;
-    height: calc(100vh - 60vmin); /* fill remaining screen */
-    margin-top: 0;
+    height: auto;                     /* let content decide height */
+    margin-top: 10px;
+    gap: 5px;                         /* spacing between buttons */
   }
   .controls button, .controls input[type="color"] {
-    flex: 1;                     /* fill equally */
-    width: 100%;
+    width: 100% !important;          /* full width */
+    flex: unset !important;          /* cancel desktop flex:1 */
     margin: 0;
-    font-size: 1.5em;            /* bigger text */
-    border-radius: 0;            /* optional, fill nicely */
+    font-size: 1.4em;
+    border-radius: 6px;
   }
 }
+
 </style>
 
 </head>
