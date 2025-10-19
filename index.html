@@ -50,16 +50,20 @@ canvas {
 
 .controls {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   width: 90vmin;
   margin: 10px auto 0 auto;
-  justify-content: center;
+  gap: 4px;
+}
+
+.controls .top-row {
+  display: flex;
+  gap: 4px;
 }
 
 .controls button,
 .controls input[type="color"] {
   flex: 1 1 auto;
-  margin: 2px;
   padding: 10px;
   font-weight: bold;
   border-radius: 6px;
@@ -68,39 +72,42 @@ canvas {
   color: black;
   cursor: pointer;
   text-align: center;
-  min-width: 0;
 }
 
 /* MOBILE FIX */
 @media(max-width:768px){
-  body {
-    height: 100vh;
-  }
-
   #container {
     width: 100vw;
-    height: 100vw; /* always square relative to screen width */
+    height: 100vw; /* square */
   }
 
   .controls {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    width: 100%;
-    height: calc(100vh - 100vw); /* fill remaining space */
+    flex: 1;
+    height: calc(100vh - 100vw); /* remaining space below container */
     margin: 0;
-    display: flex;
+    flex-direction: column;
     justify-content: space-between; /* evenly space buttons */
     padding: 5px;
     box-sizing: border-box;
+    gap: 2px;
+  }
+
+  .controls .top-row {
+    flex-direction: row;
   }
 
   .controls button,
   .controls input[type="color"] {
-    flex: 1; /* all buttons fill equally vertical space */
+    flex: 1;
     width: 100%;
-    margin: 2px 0; /* space between each button */
+    margin: 2px 0; /* space between buttons */
     font-size: 1.2em;
     border-radius: 8px;
+  }
+
+  #save {
+    background: green;
+    color: white;
   }
 }
 </style>
@@ -114,16 +121,19 @@ canvas {
 </div>
 
 <div class="controls">
-  <button id="bgButton">Background</button>
-  <input type="color" id="bgColor" value="#ffffff" style="display:none;">
-  <button id="colorMaskButton">Billie Color</button>
-  <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
-  <button id="sceneBtn">🎬 Scene</button>
-  <button id="save">Save PNG</button>
+  <div class="top-row">
+    <button id="bgButton">Background</button>
+    <input type="color" id="bgColor" value="#ffffff" style="display:none;">
+    <button id="colorMaskButton">Billie Color</button>
+    <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
+  </div>
 
+  <button id="sceneBtn">🎬 Scene</button>
   <button id="swapHorn">Horn</button>
   <button id="swapHat">Hat</button>
   <button id="swapMask">Glasses</button>
+
+  <button id="save">Save PNG</button>
 </div>
 
 <script>
