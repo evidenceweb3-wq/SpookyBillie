@@ -12,10 +12,9 @@ body {
   justify-content: flex-start;
   margin: 0;
   font-family: sans-serif;
-  min-height: 100vh;
+  height: 100vh;
 }
 
-/* Container for canvas and overlay buttons */
 #container {
   position: relative;
   width: 90vmin;
@@ -31,17 +30,13 @@ body {
   justify-content: center;
 }
 
-/* Canvas scales correctly inside container */
 canvas {
   width: 100%;
   height: 100%;
-  max-width: 100%;
-  max-height: 100%;
   border-radius: 10px;
   display: block;
 }
 
-/* Overlay buttons inside container */
 .containerButtons {
   position: absolute;
   bottom: 10px;
@@ -61,7 +56,6 @@ canvas {
   box-shadow: 0 0 6px rgba(0,0,0,0.3);
 }
 
-/* Main controls */
 .controls, .secondaryControls {
   margin-top: 10px;
   display: flex;
@@ -73,7 +67,7 @@ canvas {
 }
 
 .controls button, .secondaryControls button {
-  flex: 1 1 auto;
+  flex: 1 1 30%;
   padding: 8px 0;
   border-radius: 6px;
   border: none;
@@ -84,34 +78,11 @@ canvas {
   transition: all 0.2s ease;
 }
 
-/* Mobile adjustments */
-@media (max-width:600px){
-  #container {
-    width: 95vw;
-    height: auto;
-    aspect-ratio: 1/1; /* keeps container square */
-    margin-top: 5px;
-  }
-
-  canvas {
-    width: 100%;
-    height: 100%;
-  }
-
-  .controls, .secondaryControls {
-    width: 95vw;
-    flex-direction: column; /* stack buttons vertically */
-    gap: 6px;
-  }
-
-  .controls button, .secondaryControls button {
-    flex: 1 1 100%;
-  }
-
-  .containerButtons {
-    flex-direction: column; 
-    gap: 6px;
-  }
+@media(max-width:600px){
+  #container { width: 100vw; height: 100vw; margin-top:0; }
+  .controls, .secondaryControls { width: 100vw; flex-direction: column; }
+  .controls button, .secondaryControls button { flex: 1 1 100%; }
+  .containerButtons { flex-direction: column; gap: 6px; }
 }
 </style>
 </head>
@@ -144,13 +115,14 @@ canvas {
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-// BASES
-const baseSources = [
+// HORNS (2 PNGs)
+const hornSources = [
   "https://i.postimg.cc/KYTmT02j/BillyFallBase3.png",
   "https://i.postimg.cc/fLKn7Fq6/Horn2.png"
 ];
-const bases = [];
-let currentBase = 0;
+const horns = [];
+let currentHorn = 0;
+hornSources.forEach(src => { const img = new Image(); img.crossOrigin="anonymous"; img.src=src; horns.push(img); });
 
 // MASKS
 const maskSources = [
@@ -167,15 +139,13 @@ const maskSources = [
 ];
 const masks = [];
 let currentMask = 0;
+maskSources.forEach(src => { if(src){ const img=new Image(); img.crossOrigin="anonymous"; img.src=src; masks.push(img);} else masks.push(null); });
 
 // HATS
-const hatSources = [
-  null,
-  "https://i.postimg.cc/636Tj5xG/Hattes2sombras.png",
-  "https://i.postimg.cc/yN3z7Mh5/Hateer23.png"
-];
+const hatSources = [null,"https://i.postimg.cc/636Tj5xG/Hattes2sombras.png","https://i.postimg.cc/yN3z7Mh5/Hateer23.png"];
 const hats = [];
 let currentHat = 0;
+hatSources.forEach(src => { if(src){ const img=new Image(); img.crossOrigin="anonymous"; img.src=src; hats.push(img);} else hats.push(null); });
 
 // COLOR MASK
 const colorMaskSrc = "https://i.postimg.cc/0NzkgQgy/Mask40.png";
@@ -194,13 +164,8 @@ const sceneSources = [
   "https://i.postimg.cc/132fCVjd/Chat-GPT-Image-8-oct-2025-16-45-48.png",
   "https://i.postimg.cc/XNTpMmZg/Noche2.png"
 ];
-const sceneImgs = sceneSources.map(src => {
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-  img.src = src;
-  return img;
-});
-let currentScene = sceneImgs.length;
+const sceneImgs = sceneSources.map(src => { const img = new Image(); img.crossOrigin="anonymous"; img.src=src; return img; });
+let currentScene = -1;
 let showScene = false;
 
 // FALLING LEAVES
@@ -216,12 +181,25 @@ let showLeaves = false;
 let naturalW = 800, naturalH = 800;
 let bgColor = document.getElementById('bgColor').value;
 
-// preload images
-baseSources.forEach(src => { const img = new Image(); img.crossOrigin="anonymous"; img.src=src; bases.push(img); });
-maskSources.forEach(src => { if(src){ const img=new Image(); img.crossOrigin="anonymous"; img.src=src; masks.push(img);} else masks.push(null); });
-hatSources.forEach(src => { if(src){ const img=new Image(); img.crossOrigin="anonymous"; img.src=src; hats.push(img);} else hats.push(null); });
+// Wait for images to load
+let imagesLoaded = 0;
+const allImages = [...horns, ...masks.filter(Boolean), ...hats.filter(Boolean)];
+allImages.forEach(img=>{
+  img.onload = () => {
+    imagesLoaded++;
+    if(imagesLoaded === allImages.length){
+      naturalW = horns[0].naturalWidth;
+      naturalH = horns[0].naturalHeight;
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = naturalW * ratio;
+      canvas.height = naturalH * ratio;
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      animate();
+    }
+  }
+});
 
-// particles
+// PARTICLES
 function initParticles(){
   particles.length=0; largeParticles.length=0;
   for(let i=0;i<particleCount;i++){
@@ -236,22 +214,21 @@ function initParticles(){
   }
 }
 
-// render
+// RENDER
 function render(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle=bgColor;
-  ctx.fillRect(0,0,naturalW,naturalH);
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  if(showScene && currentScene<sceneImgs.length && sceneImgs[currentScene].complete)
-    ctx.drawImage(sceneImgs[currentScene],0,0,naturalW,naturalH);
+  if(showScene && currentScene>=0 && currentScene<sceneImgs.length && sceneImgs[currentScene].complete)
+    ctx.drawImage(sceneImgs[currentScene],0,0,canvas.width,canvas.height);
 
   if(!(showScene && currentScene===1)){
-    if(bgLeaves.complete) ctx.drawImage(bgLeaves,0,0,naturalW,naturalH);
+    if(bgLeaves.complete) ctx.drawImage(bgLeaves,0,0,canvas.width,canvas.height);
     if(showLeaves) drawLeaves();
   }
 
-  const yOffset=(showScene && currentScene===1)?90:0;
-
+  const yOffset = (showScene && currentScene===1) ? 90 : 0;
   const skeletesMaskURL="https://i.postimg.cc/SsTT1FSb/Skeletes2.png";
   const skeletesActive=masks[currentMask] && masks[currentMask].src.includes(skeletesMaskURL);
 
@@ -261,30 +238,29 @@ function render(){
     ctx.shadowBlur=30+Math.sin(Date.now()/400)*15;
     ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
     ctx.globalAlpha=0.8;
-    ctx.drawImage(masks[currentMask],0,yOffset,naturalW,naturalH);
+    ctx.drawImage(masks[currentMask],0,yOffset,canvas.width,canvas.height);
     ctx.restore();
-    ctx.drawImage(masks[currentMask],0,yOffset,naturalW,naturalH);
+    ctx.drawImage(masks[currentMask],0,yOffset,canvas.width,canvas.height);
   } else {
-    ctx.drawImage(bases[currentBase],0,yOffset,naturalW,naturalH);
+    ctx.drawImage(horns[currentHorn],0,yOffset,canvas.width,canvas.height);
     if(colorMask.complete && colorMaskColor){
       ctx.save();
       const temp=document.createElement("canvas");
-      temp.width=naturalW; temp.height=naturalH;
+      temp.width=canvas.width; temp.height=canvas.height;
       const tctx=temp.getContext("2d");
-      tctx.drawImage(colorMask,0,yOffset,naturalW,naturalH);
+      tctx.drawImage(colorMask,0,yOffset,canvas.width,canvas.height);
       tctx.globalCompositeOperation="source-in";
       tctx.fillStyle=colorMaskColor;
-      tctx.fillRect(0,0,naturalW,naturalH);
+      tctx.fillRect(0,0,canvas.width,canvas.height);
       ctx.drawImage(temp,0,0);
       ctx.restore();
     }
   }
 
   if(masks[currentMask] && !skeletesActive)
-    ctx.drawImage(masks[currentMask],0,yOffset,naturalW,naturalH);
+    ctx.drawImage(masks[currentMask],0,yOffset,canvas.width,canvas.height);
 
-  // 🎩 HATS ALWAYS ON TOP
-  if(hats[currentHat]) ctx.drawImage(hats[currentHat],0,yOffset,naturalW,naturalH);
+  if(hats[currentHat]) ctx.drawImage(hats[currentHat],0,yOffset,canvas.width,canvas.height);
 }
 
 function drawLeaves(){
@@ -299,21 +275,14 @@ function drawLeaves(){
     ctx.restore();
     p.x+=p.vx+Math.sin(p.swayPhase*0.5)*0.3;
     p.y+=p.vy; p.angle+=p.vAngle; p.swayPhase+=p.swaySpeed;
-    if(p.y>naturalH){p.y=-p.img.height; p.x=Math.random()*naturalW;}
-    if(p.x>naturalW) p.x=0; if(p.x<0) p.x=naturalW;
+    if(p.y>canvas.height){p.y=-p.img.height; p.x=Math.random()*canvas.width;}
+    if(p.x>canvas.width) p.x=0; if(p.x<0) p.x=canvas.width;
   });
 }
 
 function animate(){ render(); requestAnimationFrame(animate); }
 
 // BUTTONS
-document.getElementById('prevBase').onclick=()=>{currentBase=(currentBase-1+bases.length)%bases.length;render();};
-document.getElementById('nextBase').onclick=()=>{currentBase=(currentBase+1)%bases.length;render();};
-document.getElementById('prevMask').onclick=()=>{currentMask=(currentMask-1+masks.length)%masks.length;render();};
-document.getElementById('nextMask').onclick=()=>{currentMask=(currentMask+1)%masks.length;render();};
-document.getElementById('prevHat').onclick=()=>{currentHat=(currentHat-1+hats.length)%hats.length;render();};
-document.getElementById('nextHat').onclick=()=>{currentHat=(currentHat+1)%hats.length;render();};
-
 const bgBtn=document.getElementById('bgButton');
 const bgColorInput=document.getElementById('bgColor');
 const sceneBtn=document.getElementById('sceneBtn');
@@ -322,7 +291,7 @@ bgColorInput.oninput=(e)=>{
   bgColor=e.target.value;
   bgBtn.style.background=bgColor;
   bgBtn.style.color=getTextColor(bgColor);
-  showScene=false; currentScene=sceneImgs.length;
+  showScene=false; currentScene=-1;
   sceneBtn.textContent="🎬 No Scene"; sceneBtn.style.boxShadow="none";
   render();
 };
@@ -333,7 +302,7 @@ colorMaskBtn.onclick=()=>colorMaskInput.click();
 colorMaskInput.oninput=(e)=>{colorMaskColor=e.target.value;colorMaskBtn.style.background=colorMaskColor;colorMaskBtn.style.color=getTextColor(colorMaskColor);render();};
 
 document.getElementById('randomBtn').onclick=()=>{
-  currentBase=Math.floor(Math.random()*bases.length);
+  currentHorn = Math.floor(Math.random()*horns.length);
   currentMask=Math.floor(Math.random()*masks.length);
   currentHat=Math.floor(Math.random()*hats.length);
   const hueMask=Math.floor(Math.random()*360);
@@ -362,6 +331,22 @@ document.getElementById('save').onclick=()=>{
   link.click();
 };
 
+// SECONDARY CONTROLS
+document.getElementById('hornBtn').onclick = () => {
+  currentHorn = (currentHorn + 1) % horns.length;
+  render();
+};
+document.getElementById('hatBtn').onclick = () => {
+  currentHat = (currentHat + 1) % hats.length;
+  render();
+};
+document.getElementById('glassesBtn').onclick = () => {
+  let idx = currentMask;
+  do { idx = (idx + 1) % masks.length; } while(!masks[idx]);
+  currentMask = idx;
+  render();
+};
+
 function getTextColor(hex){
   const c=hex.substring(1);
   const rgb=parseInt(c,16);
@@ -369,17 +354,6 @@ function getTextColor(hex){
   const lum=0.299*r+0.587*g+0.114*b;
   return lum<128?'white':'black';
 }
-
-// INIT
-bases[0].onload=()=>{
-  naturalW=bases[0].naturalWidth;
-  naturalH=bases[0].naturalHeight;
-  const ratio=window.devicePixelRatio||1;
-  canvas.width=naturalW*ratio;
-  canvas.height=naturalH*ratio;
-  ctx.setTransform(ratio,0,0,ratio,0,0);
-  animate();
-};
 </script>
 </body>
 </html>
