@@ -9,48 +9,50 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
   margin: 0;
   font-family: sans-serif;
+  color: #fff;
 }
+#topButtons, #bottomButtons {
+  display: flex;
+  width: 90vmin;
+  max-width: 800px;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+#topButtons button, #bottomButtons button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background: white;
+  color: black;
+  transition: all 0.2s ease;
+}
+
 #container {
   background: #fff;
   border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
   width: 90vmin;
+  max-width: 800px;
   height: 90vmin;
+  max-height: 800px;
   overflow: hidden;
+  position: relative;
 }
+
 canvas {
-  display: block;
   width: 100%;
   height: 100%;
+  display: block;
   border-radius: 10px;
 }
-.arrow {
-  position: absolute;
-  font-size: 32px;
-  background: rgba(255,255,255,0.8);
-  border: none;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 6px;
-  z-index: 5;
-}
-.arrow.left { left: 10px; top: 50%; transform: translateY(-50%); }
-.arrow.right { right: 10px; top: 50%; transform: translateY(-50%); }
-.arrow.mask-left { left: 10px; bottom: 5%; transform: translateY(0); }
-.arrow.mask-right { right: 10px; bottom: 5%; transform: translateY(0); }
-.arrow.hat-left { left: 10px; top: 10%; transform: translateY(0); }
-.arrow.hat-right { right: 10px; top: 10%; transform: translateY(0); }
 
 #randomBtn, #leavesBtn {
   position: absolute;
-  top: 10px;
   padding: 8px 12px;
   border-radius: 6px;
   border: none;
@@ -59,52 +61,37 @@ canvas {
   cursor: pointer;
   z-index: 10;
 }
-#randomBtn { right: 10px; }
-#leavesBtn { left: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
+#randomBtn { right: 10px; top: 10px; }
+#leavesBtn { left: 10px; top: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
 
-.controls {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.controls button {
-  padding: 8px 12px;
-  cursor: pointer;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  background: white;
-  color: black;
-  transition: all 0.2s ease;
+input[type=color] {
+  display: none;
 }
 </style>
 </head>
 <body>
 
+<div id="topButtons">
+  <button id="prevBase">HORNS ◀</button>
+  <button id="prevMask">GLASSES ◀</button>
+  <button id="prevHat">HAT ◀</button>
+</div>
+
 <div id="container">
-  <button class="arrow left" id="prevBase">&#8592;</button>
   <canvas id="canvas"></canvas>
-  <button class="arrow right" id="nextBase">&#8594;</button>
-
-  <button class="arrow mask-left" id="prevMask">&#8592;</button>
-  <button class="arrow mask-right" id="nextMask">&#8594;</button>
-
-  <button class="arrow hat-left" id="prevHat">&#8592;</button>
-  <button class="arrow hat-right" id="nextHat">&#8594;</button>
-
   <button id="randomBtn">🎲 Random</button>
   <button id="leavesBtn">🍂 Leaves</button>
 </div>
-  
-<div class="controls">
+
+<div id="bottomButtons">
   <button id="bgButton">Background</button>
-  <input type="color" id="bgColor" value="#ffffff" style="display:none;">
   <button id="colorMaskButton">Billie Color</button>
-  <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
   <button id="sceneBtn">🎬 Scene</button>
   <button id="save">Save PNG</button>
 </div>
+
+<input type="color" id="bgColor" value="#ffffff">
+<input type="color" id="colorMask" value="#ffcc99">
 
 <script>
 const canvas = document.getElementById('canvas');
@@ -249,7 +236,6 @@ function render(){
   if(masks[currentMask] && !skeletesActive)
     ctx.drawImage(masks[currentMask],0,yOffset,naturalW,naturalH);
 
-  // 🎩 HATS ALWAYS ON TOP
   if(hats[currentHat]) ctx.drawImage(hats[currentHat],0,yOffset,naturalW,naturalH);
 }
 
@@ -272,14 +258,12 @@ function drawLeaves(){
 
 function animate(){ render(); requestAnimationFrame(animate); }
 
-// BUTTONS
+// TOP BUTTONS
 document.getElementById('prevBase').onclick=()=>{currentBase=(currentBase-1+bases.length)%bases.length;render();};
-document.getElementById('nextBase').onclick=()=>{currentBase=(currentBase+1)%bases.length;render();};
 document.getElementById('prevMask').onclick=()=>{currentMask=(currentMask-1+masks.length)%masks.length;render();};
-document.getElementById('nextMask').onclick=()=>{currentMask=(currentMask+1)%masks.length;render();};
 document.getElementById('prevHat').onclick=()=>{currentHat=(currentHat-1+hats.length)%hats.length;render();};
-document.getElementById('nextHat').onclick=()=>{currentHat=(currentHat+1)%hats.length;render();};
 
+// BOTTOM BUTTONS
 const bgBtn=document.getElementById('bgButton');
 const bgColorInput=document.getElementById('bgColor');
 const sceneBtn=document.getElementById('sceneBtn');
