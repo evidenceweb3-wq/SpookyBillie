@@ -9,94 +9,122 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+  justify-content: flex-start;
   margin: 0;
   font-family: sans-serif;
+  min-height: 100vh;
 }
+
+/* Container for canvas and overlay buttons */
 #container {
-  background: #fff;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
   width: 90vmin;
   height: 90vmin;
-  overflow: hidden;
-}
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
+  max-width: 90vw;
+  max-height: 90vw;
+  background: #fff;
   border-radius: 10px;
-}
-.arrow {
-  position: absolute;
-  font-size: 32px;
-  background: rgba(255,255,255,0.8);
-  border: none;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 6px;
-  z-index: 5;
-}
-.arrow.left { left: 10px; top: 50%; transform: translateY(-50%); }
-.arrow.right { right: 10px; top: 50%; transform: translateY(-50%); }
-.arrow.mask-left { left: 10px; bottom: 5%; transform: translateY(0); }
-.arrow.mask-right { right: 10px; bottom: 5%; transform: translateY(0); }
-.arrow.hat-left { left: 10px; top: 10%; transform: translateY(0); }
-.arrow.hat-right { right: 10px; top: 10%; transform: translateY(0); }
-
-#randomBtn, #leavesBtn {
-  position: absolute;
-  top: 10px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: none;
-  font-weight: bold;
-  background: white;
-  cursor: pointer;
-  z-index: 10;
-}
-#randomBtn { right: 10px; }
-#leavesBtn { left: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
-
-.controls {
+  overflow: hidden;
   margin-top: 10px;
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
-.controls button {
-  padding: 8px 12px;
-  cursor: pointer;
-  font-weight: bold;
-  border: none;
+
+/* Canvas scales correctly inside container */
+canvas {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+  display: block;
+}
+
+/* Overlay buttons inside container */
+.containerButtons {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.containerButtons button {
+  padding: 6px 12px;
   border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+}
+
+/* Main controls */
+.controls, .secondaryControls {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  width: 90vmin;
+  max-width: 90vw;
+}
+
+.controls button, .secondaryControls button {
+  flex: 1 1 auto;
+  padding: 8px 0;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
   background: white;
   color: black;
   transition: all 0.2s ease;
+}
+
+/* Mobile adjustments */
+@media (max-width:600px){
+  #container {
+    width: 95vw;
+    height: auto;
+    aspect-ratio: 1/1; /* keeps container square */
+    margin-top: 5px;
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .controls, .secondaryControls {
+    width: 95vw;
+    flex-direction: column; /* stack buttons vertically */
+    gap: 6px;
+  }
+
+  .controls button, .secondaryControls button {
+    flex: 1 1 100%;
+  }
+
+  .containerButtons {
+    flex-direction: column; 
+    gap: 6px;
+  }
 }
 </style>
 </head>
 <body>
 
 <div id="container">
-  <button class="arrow left" id="prevBase">&#8592;</button>
   <canvas id="canvas"></canvas>
-  <button class="arrow right" id="nextBase">&#8594;</button>
-
-  <button class="arrow mask-left" id="prevMask">&#8592;</button>
-  <button class="arrow mask-right" id="nextMask">&#8594;</button>
-
-  <button class="arrow hat-left" id="prevHat">&#8592;</button>
-  <button class="arrow hat-right" id="nextHat">&#8594;</button>
-
-  <button id="randomBtn">🎲 Random</button>
-  <button id="leavesBtn">🍂 Leaves</button>
+  <div class="containerButtons">
+    <button id="randomBtn">🎲 Random</button>
+    <button id="leavesBtn">🍂 Leaves</button>
+  </div>
 </div>
-  
+
 <div class="controls">
   <button id="bgButton">Background</button>
   <input type="color" id="bgColor" value="#ffffff" style="display:none;">
@@ -104,6 +132,12 @@ canvas {
   <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
   <button id="sceneBtn">🎬 Scene</button>
   <button id="save">Save PNG</button>
+</div>
+
+<div class="secondaryControls">
+  <button id="hornBtn">Horns</button>
+  <button id="hatBtn">Hats</button>
+  <button id="glassesBtn">Glasses</button>
 </div>
 
 <script>
