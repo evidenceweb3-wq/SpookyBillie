@@ -32,48 +32,6 @@ canvas {
   border-radius: 10px;
 }
 
-/* Mobile stacked buttons at top of container */
-.asset-buttons-mobile {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 10;
-}
-.asset-buttons-mobile button {
-  padding: 10px 16px;
-  font-weight: bold;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: white;
-  color: black;
-  transition: all 0.2s ease;
-}
-
-/* Desktop buttons inside controls row */
-.controls {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.controls button {
-  padding: 8px 12px;
-  cursor: pointer;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  background: white;
-  color: black;
-  transition: all 0.2s ease;
-}
-
-/* Random and leaves buttons on top corners of container */
 #randomBtn, #leavesBtn {
   position: absolute;
   top: 10px;
@@ -88,9 +46,39 @@ canvas {
 #randomBtn { right: 10px; }
 #leavesBtn { left: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
 
-/* Responsive mobile adjustments */
+.controls {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column; /* vertical stacking */
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controls .main-buttons, .controls .asset-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.controls .asset-buttons button {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background: white;
+  color: black;
+  transition: all 0.2s ease;
+}
+
+/* For mobile, make asset buttons vertical */
 @media (max-width: 768px) {
-  .controls .asset-desktop { display: none; }
+  .controls .asset-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
 }
 </style>
 </head>
@@ -98,31 +86,28 @@ canvas {
 
 <div id="container">
   <canvas id="canvas"></canvas>
-
-  <!-- Mobile buttons stacked vertically -->
-  <div class="asset-buttons-mobile">
-    <button id="hornsBtnMobile">HORNS</button>
-    <button id="hatBtnMobile">HAT</button>
-    <button id="glassesBtnMobile">GLASSES</button>
-  </div>
-
   <button id="randomBtn">🎲 Random</button>
   <button id="leavesBtn">🍂 Leaves</button>
 </div>
 
-<!-- Bottom controls for desktop -->
+<!-- Bottom controls -->
 <div class="controls">
-  <button id="bgButton">Background</button>
-  <input type="color" id="bgColor" value="#ffffff" style="display:none;">
-  <button id="colorMaskButton">Billie Color</button>
-  <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
-  <button id="sceneBtn">🎬 Scene</button>
-  <button id="save">Save PNG</button>
+  <!-- Main function buttons -->
+  <div class="main-buttons">
+    <button id="bgButton">Background</button>
+    <input type="color" id="bgColor" value="#ffffff" style="display:none;">
+    <button id="colorMaskButton">Billie Color</button>
+    <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
+    <button id="sceneBtn">🎬 Scene</button>
+    <button id="save">Save PNG</button>
+  </div>
 
-  <!-- Desktop HORNS/HAT/GLASSES buttons -->
-  <button class="asset-desktop" id="hornsBtnDesktop">HORNS</button>
-  <button class="asset-desktop" id="hatBtnDesktop">HAT</button>
-  <button class="asset-desktop" id="glassesBtnDesktop">GLASSES</button>
+  <!-- New HORNS/HAT/GLASSES buttons under main buttons -->
+  <div class="asset-buttons">
+    <button id="hornsBtn">HORNS</button>
+    <button id="hatBtn">HAT</button>
+    <button id="glassesBtn">GLASSES</button>
+  </div>
 </div>
 
 <script>
@@ -236,7 +221,6 @@ function render(){
   }
 
   const yOffset=(showScene && currentScene===1)?90:0;
-
   const skeletesMaskURL="https://i.postimg.cc/SsTT1FSb/Skeletes2.png";
   const skeletesActive=masks[currentMask] && masks[currentMask].src.includes(skeletesMaskURL);
 
@@ -291,14 +275,9 @@ function drawLeaves(){
 function animate(){ render(); requestAnimationFrame(animate); }
 
 // BUTTON HANDLERS
-const hornBtns = [document.getElementById('hornsBtnMobile'), document.getElementById('hornsBtnDesktop')];
-hornBtns.forEach(btn => btn.onclick = () => { currentBase = (currentBase + 1) % bases.length; render(); });
-
-const hatBtns = [document.getElementById('hatBtnMobile'), document.getElementById('hatBtnDesktop')];
-hatBtns.forEach(btn => btn.onclick = () => { currentHat = (currentHat + 1) % hats.length; render(); });
-
-const glassesBtns = [document.getElementById('glassesBtnMobile'), document.getElementById('glassesBtnDesktop')];
-glassesBtns.forEach(btn => btn.onclick = () => { currentMask = (currentMask + 1) % masks.length; render(); });
+document.getElementById('hornsBtn').onclick = () => { currentBase = (currentBase + 1) % bases.length; render(); };
+document.getElementById('hatBtn').onclick = () => { currentHat = (currentHat + 1) % hats.length; render(); };
+document.getElementById('glassesBtn').onclick = () => { currentMask = (currentMask + 1) % masks.length; render(); };
 
 document.getElementById('randomBtn').onclick=()=>{
   currentBase=Math.floor(Math.random()*bases.length);
