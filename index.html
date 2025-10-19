@@ -9,9 +9,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin: 0;
   font-family: sans-serif;
+  height: 100vh;
 }
 
 #container {
@@ -24,6 +25,7 @@ body {
   width: 90vmin;
   height: 90vmin;
   overflow: hidden;
+  margin-top: 10px;
 }
 
 canvas {
@@ -48,22 +50,23 @@ canvas {
 #leavesBtn { left: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
 
 .controls {
-  margin-top: 10px;
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  width: 90vmin;
+  margin-top: 10px;
 }
-.controls button {
-  padding: 8px 12px;
-  cursor: pointer;
+.controls button, .controls input[type="color"] {
+  flex: 1;
+  min-width: 0;
+  margin: 2px;
+  padding: 8px;
   font-weight: bold;
-  border: none;
   border-radius: 6px;
+  border: none;
   background: white;
   color: black;
-  transition: all 0.2s ease;
-  flex: 1;
-  min-width: 80px;
+  cursor: pointer;
+  text-align: center;
 }
 
 /* Mobile adjustments */
@@ -75,9 +78,13 @@ canvas {
   .controls {
     flex-direction: column;
     width: 100%;
+    height: calc(100vh - 60vmin - 20px);
   }
-  .controls button {
+  .controls button, .controls input[type="color"] {
+    flex: 1;
     width: 100%;
+    margin: 0;
+    font-size: 1.2em;
   }
 }
 </style>
@@ -98,7 +105,7 @@ canvas {
   <button id="sceneBtn">🎬 Scene</button>
   <button id="save">Save PNG</button>
 
-  <!-- SINGLE SWAP BUTTONS -->
+  <!-- Individual swap buttons -->
   <button id="swapHorn">Horn</button>
   <button id="swapHat">Hat</button>
   <button id="swapMask">Glasses</button>
@@ -108,7 +115,7 @@ canvas {
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-// BASES (Horns)
+// BASES
 const baseSources = [
   "https://i.postimg.cc/KYTmT02j/BillyFallBase3.png",
   "https://i.postimg.cc/fLKn7Fq6/Horn2.png"
@@ -116,7 +123,7 @@ const baseSources = [
 const bases = [];
 let currentBase = 0;
 
-// MASKS (Glasses)
+// MASKS
 const maskSources = [
   null,
   "https://i.postimg.cc/5NWYLjj2/Mask-Pumpking3.png",
@@ -158,12 +165,7 @@ const sceneSources = [
   "https://i.postimg.cc/132fCVjd/Chat-GPT-Image-8-oct-2025-16-45-48.png",
   "https://i.postimg.cc/XNTpMmZg/Noche2.png"
 ];
-const sceneImgs = sceneSources.map(src => {
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-  img.src = src;
-  return img;
-});
+const sceneImgs = sceneSources.map(src => { const img = new Image(); img.crossOrigin="anonymous"; img.src=src; return img; });
 let currentScene = sceneImgs.length;
 let showScene = false;
 
@@ -180,12 +182,12 @@ let showLeaves = false;
 let naturalW = 800, naturalH = 800;
 let bgColor = document.getElementById('bgColor').value;
 
-// preload images
-baseSources.forEach(src => { const img = new Image(); img.crossOrigin="anonymous"; img.src=src; bases.push(img); });
-maskSources.forEach(src => { if(src){ const img=new Image(); img.crossOrigin="anonymous"; img.src=src; masks.push(img);} else masks.push(null); });
-hatSources.forEach(src => { if(src){ const img=new Image(); img.crossOrigin="anonymous"; img.src=src; hats.push(img);} else hats.push(null); });
+// Preload
+baseSources.forEach(src => { const img=new Image(); img.crossOrigin="anonymous"; img.src=src; bases.push(img); });
+maskSources.forEach(src => { if(src){ const img=new Image(); img.crossOrigin="anonymous"; img.src=src; masks.push(img); } else masks.push(null); });
+hatSources.forEach(src => { if(src){ const img=new Image(); img.crossOrigin="anonymous"; img.src=src; hats.push(img); } else hats.push(null); });
 
-// particles
+// Particles
 function initParticles(){
   particles.length=0; largeParticles.length=0;
   for(let i=0;i<particleCount;i++){
@@ -200,7 +202,7 @@ function initParticles(){
   }
 }
 
-// render
+// RENDER
 function render(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle=bgColor;
@@ -215,6 +217,7 @@ function render(){
   }
 
   const yOffset=(showScene && currentScene===1)?90:0;
+
   const skeletesMaskURL="https://i.postimg.cc/SsTT1FSb/Skeletes2.png";
   const skeletesActive=masks[currentMask] && masks[currentMask].src.includes(skeletesMaskURL);
 
@@ -268,49 +271,34 @@ function drawLeaves(){
 
 function animate(){ render(); requestAnimationFrame(animate); }
 
-// SINGLE BUTTON SWAP
-document.getElementById('swapHorn').onclick = ()=>{currentBase=(currentBase+1)%bases.length; render();};
-document.getElementById('swapHat').onclick = ()=>{currentHat=(currentHat+1)%hats.length; render();};
-document.getElementById('swapMask').onclick = ()=>{currentMask=(currentMask+1)%masks.length; render();};
-
-// OTHER BUTTONS
-const bgBtn=document.getElementById('bgButton');
-const bgColorInput=document.getElementById('bgColor');
-const sceneBtn=document.getElementById('sceneBtn');
-bgBtn.onclick=()=>bgColorInput.click();
-bgColorInput.oninput=(e)=>{
+// BUTTONS
+document.getElementById('bgButton').onclick=()=>document.getElementById('bgColor').click();
+document.getElementById('bgColor').oninput=(e)=>{
   bgColor=e.target.value;
-  bgBtn.style.background=bgColor;
-  bgBtn.style.color=getTextColor(bgColor);
+  document.getElementById('bgButton').style.background=bgColor;
+  document.getElementById('bgButton').style.color=getTextColor(bgColor);
   showScene=false; currentScene=sceneImgs.length;
-  sceneBtn.textContent="🎬 No Scene"; sceneBtn.style.boxShadow="none";
+  document.getElementById('sceneBtn').textContent="🎬 No Scene";
+  document.getElementById('sceneBtn').style.boxShadow="none";
   render();
 };
 
-const colorMaskBtn=document.getElementById('colorMaskButton');
-const colorMaskInput=document.getElementById('colorMask');
-colorMaskBtn.onclick=()=>colorMaskInput.click();
-colorMaskInput.oninput=(e)=>{colorMaskColor=e.target.value;colorMaskBtn.style.background=colorMaskColor;colorMaskBtn.style.color=getTextColor(colorMaskColor);render();};
-
-document.getElementById('randomBtn').onclick=()=>{
-  currentBase=Math.floor(Math.random()*bases.length);
-  currentMask=Math.floor(Math.random()*masks.length);
-  currentHat=Math.floor(Math.random()*hats.length);
-  const hueMask=Math.floor(Math.random()*360);
-  colorMaskColor=`hsl(${hueMask},60%,60%)`;
-  colorMaskBtn.style.background=colorMaskColor;
+document.getElementById('colorMaskButton').onclick=()=>document.getElementById('colorMask').click();
+document.getElementById('colorMask').oninput=(e)=>{ 
+  colorMaskColor=e.target.value; 
+  const btn=document.getElementById('colorMaskButton'); 
+  btn.style.background=colorMaskColor; 
+  btn.style.color=getTextColor(colorMaskColor); 
   render();
 };
 
-document.getElementById('leavesBtn').onclick=()=>{showLeaves=!showLeaves;if(showLeaves)initParticles();};
-
-sceneBtn.onclick=()=>{
+document.getElementById('sceneBtn').onclick=()=>{
   currentScene=(currentScene+1)%(sceneImgs.length+1);
   if(currentScene===sceneImgs.length){
-    showScene=false;sceneBtn.textContent="🎬 No Scene";sceneBtn.style.boxShadow="none";
-  }else{
-    showScene=true;sceneBtn.textContent=`🎬 Scene ${currentScene+1}`;
-    sceneBtn.style.boxShadow=(currentScene===0?"0 0 12px 4px gold":"0 0 12px 4px purple");
+    showScene=false; document.getElementById('sceneBtn').textContent="🎬 No Scene"; document.getElementById('sceneBtn').style.boxShadow="none";
+  } else {
+    showScene=true; document.getElementById('sceneBtn').textContent=`🎬 Scene ${currentScene+1}`;
+    document.getElementById('sceneBtn').style.boxShadow=(currentScene===0?"0 0 12px 4px gold":"0 0 12px 4px purple");
   }
   render();
 };
@@ -321,6 +309,23 @@ document.getElementById('save').onclick=()=>{
   link.href=canvas.toDataURL();
   link.click();
 };
+
+document.getElementById('randomBtn').onclick=()=>{
+  currentBase=Math.floor(Math.random()*bases.length);
+  currentMask=Math.floor(Math.random()*masks.length);
+  currentHat=Math.floor(Math.random()*hats.length);
+  const hueMask=Math.floor(Math.random()*360);
+  colorMaskColor=`hsl(${hueMask},60%,60%)`;
+  document.getElementById('colorMaskButton').style.background=colorMaskColor;
+  render();
+};
+
+document.getElementById('leavesBtn').onclick=()=>{showLeaves=!showLeaves;if(showLeaves)initParticles();};
+
+// INDIVIDUAL SWAP BUTTONS
+document.getElementById('swapHorn').onclick=()=>{ currentBase=(currentBase+1)%bases.length; render(); };
+document.getElementById('swapHat').onclick=()=>{ currentHat=(currentHat+1)%hats.length; render(); };
+document.getElementById('swapMask').onclick=()=>{ currentMask=(currentMask+1)%masks.length; render(); };
 
 function getTextColor(hex){
   const c=hex.substring(1);
