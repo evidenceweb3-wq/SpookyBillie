@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Billy Fall Switcher + Mask + Color Mask + Leaves + Dual Scenes + Hats</title>
+<title>Billy Fall Switcher + Mobile Buttons Stack</title>
 <style>
 body {
   background: #111;
@@ -13,6 +13,7 @@ body {
   margin: 0;
   font-family: sans-serif;
   height: 100vh;
+  overflow: hidden;
 }
 
 #container {
@@ -78,32 +79,40 @@ canvas {
   transition: all 0.2s ease;
 }
 
-/* MOBILE FIXES */
+/* MOBILE LAYOUT */
 @media(max-width:600px){
   #container {
-    width: 95vw;
-    height: 95vw;
-    max-height: 80vh; /* ensures container fits inside mobile screen */
-    margin-top:5px;
+    width: 100vw;
+    height: 100vw;
+    margin-top: 0;
   }
 
   .controls, .secondaryControls, .containerButtons {
-    width: 95vw;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
+    padding: 4px;
+    background: rgba(17,17,17,0.95);
+    box-sizing: border-box;
   }
 
   .controls button, .secondaryControls button, .containerButtons button {
     flex: 1 1 auto;
     width: 100%;
-    font-size: 1.2rem;
     padding: 12px 0;
+    font-size: 1.1rem;
   }
 
   .containerButtons {
-    position: relative;
-    transform: none;
-    margin-bottom: 5px;
+    bottom: auto;
+  }
+
+  body {
+    justify-content: flex-start;
   }
 }
 </style>
@@ -377,6 +386,5 @@ function getTextColor(hex){
   return lum<128?'white':'black';
 }
 </script>
-
 </body>
 </html>
