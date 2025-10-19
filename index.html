@@ -10,10 +10,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   margin: 0;
   font-family: sans-serif;
-  min-height: 100vh;
+  height: 100vh; /* full viewport height */
 }
 
 #container {
@@ -24,7 +23,7 @@ body {
   justify-content: center;
   position: relative;
   width: 90vmin;
-  height: 90vmin;
+  height: 90vmin; /* square on desktop */
   overflow: hidden;
   margin-top: 10px;
 }
@@ -72,27 +71,35 @@ canvas {
 
 /* MOBILE FIX */
 @media(max-width:768px){
+  body {
+    justify-content: flex-start;
+  }
+
   #container {
     width: 100%;
-    height: 60vmin;
+    height: 60vmin; /* fixed square at top */
+    margin-top: 0;
   }
+
   .controls {
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
-    width: 95%;
-    margin: 10px 0;
-    gap: 8px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: calc(100vh - 60vmin); /* fill remaining space */
+    margin: 0;
+    gap: 0;
   }
+
   .controls button,
   .controls input[type="color"] {
-    width: 100% !important;
-    flex: none !important;
+    width: 100%;
+    flex: 1; /* evenly fill vertical space */
     margin: 0;
     font-size: 1.3em;
-    min-width: unset !important;
   }
 }
 </style>
+
 </head>
 <body>
 
