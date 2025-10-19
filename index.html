@@ -4,18 +4,15 @@
 <meta charset="UTF-8">
 <title>Billy Fall Switcher + Mask + Color Mask + Leaves + Dual Scenes + Hats</title>
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
+body {
   background: #111;
-  font-family: sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  overflow: hidden;
+  margin: 0;
+  font-family: sans-serif;
+  height: 100vh;
 }
 
 #container {
@@ -36,8 +33,8 @@ html, body {
 canvas {
   width: 100%;
   height: 100%;
-  display: block;
   border-radius: 10px;
+  display: block;
 }
 
 .containerButtons {
@@ -46,12 +43,11 @@ canvas {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 6px;
+  gap: 8px;
 }
 
 .containerButtons button {
-  flex: 1 1 auto;
-  padding: 10px;
+  padding: 6px 12px;
   border-radius: 6px;
   border: none;
   font-weight: bold;
@@ -61,13 +57,13 @@ canvas {
 }
 
 .controls, .secondaryControls {
+  margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
   width: 90vmin;
   max-width: 90vw;
-  margin-top: 10px;
 }
 
 .controls button, .secondaryControls button {
@@ -82,28 +78,30 @@ canvas {
   transition: all 0.2s ease;
 }
 
+/* MOBILE FIX */
 @media(max-width:600px){
   #container {
-    width: 100vw;
-    height: 100vw;
-    margin-top: 0;
+    width: 90vmin;
+    height: 90vmin;
+    max-width: 95vw;
+    max-height: 95vw;
+    margin-top: 5px;
   }
-  .containerButtons {
-    flex-direction: column;
-    bottom: 0;
-    width: 100%;
-    transform: none;
-  }
-  .containerButtons button {
-    flex: 1 1 100%;
-    margin: 0;
-  }
+
   .controls, .secondaryControls {
+    width: 95vw;
     flex-direction: column;
-    width: 100%;
+    gap: 6px;
   }
+
   .controls button, .secondaryControls button {
     flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .containerButtons {
+    flex-direction: column;
+    gap: 6px;
   }
 }
 </style>
@@ -134,10 +132,11 @@ canvas {
 </div>
 
 <script>
+// ==== CANVAS SETUP ====
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-// HORNS (2 PNGs)
+// HORNS
 const hornSources = [
   "https://i.postimg.cc/KYTmT02j/BillyFallBase3.png",
   "https://i.postimg.cc/fLKn7Fq6/Horn2.png"
@@ -309,19 +308,12 @@ const bgBtn=document.getElementById('bgButton');
 const bgColorInput=document.getElementById('bgColor');
 const sceneBtn=document.getElementById('sceneBtn');
 bgBtn.onclick=()=>bgColorInput.click();
-bgColorInput.oninput=(e)=>{
-  bgColor=e.target.value;
-  bgBtn.style.background=bgColor;
-  bgBtn.style.color=getTextColor(bgColor);
-  showScene=false; currentScene=-1;
-  sceneBtn.textContent="🎬 No Scene"; sceneBtn.style.boxShadow="none";
-  render();
-};
+bgColorInput.oninput=(e)=>{ bgColor=e.target.value; bgBtn.style.background=bgColor; bgBtn.style.color=getTextColor(bgColor); showScene=false; currentScene=-1; sceneBtn.textContent="🎬 No Scene"; sceneBtn.style.boxShadow="none"; render(); };
 
 const colorMaskBtn=document.getElementById('colorMaskButton');
 const colorMaskInput=document.getElementById('colorMask');
 colorMaskBtn.onclick=()=>colorMaskInput.click();
-colorMaskInput.oninput=(e)=>{colorMaskColor=e.target.value;colorMaskBtn.style.background=colorMaskColor;colorMaskBtn.style.color=getTextColor(colorMaskColor);render();};
+colorMaskInput.oninput=(e)=>{ colorMaskColor=e.target.value; colorMaskBtn.style.background=colorMaskColor; colorMaskBtn.style.color=getTextColor(colorMaskColor); render(); };
 
 document.getElementById('randomBtn').onclick=()=>{
   currentHorn = Math.floor(Math.random()*horns.length);
@@ -337,45 +329,19 @@ document.getElementById('leavesBtn').onclick=()=>{showLeaves=!showLeaves;if(show
 
 sceneBtn.onclick=()=>{
   currentScene=(currentScene+1)%(sceneImgs.length+1);
-  if(currentScene===sceneImgs.length){
-    showScene=false;sceneBtn.textContent="🎬 No Scene";sceneBtn.style.boxShadow="none";
-  }else{
-    showScene=true;sceneBtn.textContent=`🎬 Scene ${currentScene+1}`;
-    sceneBtn.style.boxShadow=(currentScene===0?"0 0 12px 4px gold":"0 0 12px 4px purple");
-  }
+  if(currentScene===sceneImgs.length){ showScene=false; sceneBtn.textContent="🎬 No Scene"; sceneBtn.style.boxShadow="none"; }
+  else { showScene=true; sceneBtn.textContent=`🎬 Scene ${currentScene+1}`; sceneBtn.style.boxShadow=(currentScene===0?"0 0 12px 4px gold":"0 0 12px 4px purple"); }
   render();
 };
 
-document.getElementById('save').onclick=()=>{
-  const link=document.createElement('a');
-  link.download='BillyFall.png';
-  link.href=canvas.toDataURL();
-  link.click();
-};
+document.getElementById('save').onclick=()=>{ const link=document.createElement('a'); link.download='BillyFall.png'; link.href=canvas.toDataURL(); link.click(); };
 
 // SECONDARY CONTROLS
-document.getElementById('hornBtn').onclick = () => {
-  currentHorn = (currentHorn + 1) % horns.length;
-  render();
-};
-document.getElementById('hatBtn').onclick = () => {
-  currentHat = (currentHat + 1) % hats.length;
-  render();
-};
-document.getElementById('glassesBtn').onclick = () => {
-  let idx = currentMask;
-  do { idx = (idx + 1) % masks.length; } while(!masks[idx]);
-  currentMask = idx;
-  render();
-};
+document.getElementById('hornBtn').onclick = () => { currentHorn = (currentHorn + 1) % horns.length; render(); };
+document.getElementById('hatBtn').onclick = () => { currentHat = (currentHat + 1) % hats.length; render(); };
+document.getElementById('glassesBtn').onclick = () => { let idx = currentMask; do { idx = (idx + 1) % masks.length; } while(!masks[idx]); currentMask = idx; render(); };
 
-function getTextColor(hex){
-  const c=hex.substring(1);
-  const rgb=parseInt(c,16);
-  const r=(rgb>>16)&255,g=(rgb>>8)&255,b=rgb&255;
-  const lum=0.299*r+0.587*g+0.114*b;
-  return lum<128?'white':'black';
-}
+function getTextColor(hex){ const c=hex.substring(1); const rgb=parseInt(c,16); const r=(rgb>>16)&255,g=(rgb>>8)&255,b=rgb&255; const lum=0.299*r+0.587*g+0.114*b; return lum<128?'white':'black'; }
 </script>
 </body>
 </html>
