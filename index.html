@@ -78,6 +78,54 @@ canvas {
   color: black;
   transition: all 0.2s ease;
 }
+
+/* --- MOBILE STYLES --- */
+@media (max-width: 768px) {
+  body {
+    justify-content: flex-start;
+    padding-top: 10px;
+    height: auto;
+  }
+
+  #container {
+    width: 95vw;
+    height: 95vw;
+  }
+
+  .controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    gap: 6px;
+    background: #111;
+    padding: 10px;
+    box-sizing: border-box;
+    border-top: 2px solid #333;
+  }
+
+  .controls button,
+  .controls input[type="color"] {
+    width: 100%;
+    font-size: 1.2em;
+    padding: 14px 0;
+  }
+
+  #bgButton,
+  #colorMaskButton,
+  #sceneBtn,
+  #save {
+    border-radius: 10px;
+  }
+
+  #randomBtn, #leavesBtn {
+    top: auto;
+    bottom: 120px;
+    padding: 12px 16px;
+    font-size: 1em;
+  }
+}
 </style>
 </head>
 <body>
