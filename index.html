@@ -9,10 +9,9 @@ body {
   background: #111;
   display: flex;
   flex-direction: column;
-  align-items: center;
   margin: 0;
   font-family: sans-serif;
-  height: 100vh; /* full viewport height */
+  height: 100vh; /* full viewport */
 }
 
 #container {
@@ -23,9 +22,9 @@ body {
   justify-content: center;
   position: relative;
   width: 90vmin;
-  height: 90vmin; /* square on desktop */
+  height: 90vmin; /* always square */
   overflow: hidden;
-  margin-top: 10px;
+  margin: 0 auto;
 }
 
 canvas {
@@ -53,12 +52,15 @@ canvas {
   display: flex;
   flex-wrap: wrap;
   width: 90vmin;
-  margin-top: 10px;
+  margin: 10px auto 0 auto;
+  justify-content: center;
 }
-.controls button, .controls input[type="color"] {
-  flex: 1;
+
+.controls button,
+.controls input[type="color"] {
+  flex: 1 1 auto;
   margin: 2px;
-  padding: 8px;
+  padding: 10px;
   font-weight: bold;
   border-radius: 6px;
   border: none;
@@ -72,34 +74,32 @@ canvas {
 /* MOBILE FIX */
 @media(max-width:768px){
   body {
-    justify-content: flex-start;
+    height: 100vh;
   }
 
   #container {
-    width: 100%;
-    height: 60vmin; /* fixed square at top */
-    margin-top: 0;
+    width: 100vw;
+    height: 100vw; /* always square relative to screen width */
   }
 
   .controls {
     flex-direction: column;
     flex-wrap: nowrap;
     width: 100%;
-    height: calc(100vh - 60vmin); /* fill remaining space */
+    height: calc(100vh - 100vw); /* fill remaining space */
     margin: 0;
-    gap: 0;
   }
 
   .controls button,
   .controls input[type="color"] {
+    flex: 1; /* all buttons fill equally vertical space */
     width: 100%;
-    flex: 1; /* evenly fill vertical space */
     margin: 0;
-    font-size: 1.3em;
+    font-size: 1.2em;
+    border-radius: 0;
   }
 }
 </style>
-
 </head>
 <body>
 
