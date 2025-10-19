@@ -9,20 +9,25 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   margin: 0;
   font-family: sans-serif;
   color: #fff;
+  height: 100vh; /* force viewport height */
+  overflow: hidden; /* no scrolling on desktop */
 }
+
 #topButtons, #bottomButtons {
   display: flex;
-  width: 90vmin;
+  width: 90%;
   max-width: 800px;
   justify-content: space-between;
-  margin: 10px 0;
+  margin: 5px 0;
+  gap: 5px;
 }
+
 #topButtons button, #bottomButtons button {
   flex: 1;
-  margin: 0 5px;
   padding: 10px;
   border-radius: 6px;
   border: none;
@@ -36,9 +41,9 @@ body {
 #container {
   background: #fff;
   border-radius: 10px;
-  width: 90vmin;
+  width: 90%;
   max-width: 800px;
-  height: 90vmin;
+  height: 90%;
   max-height: 800px;
   overflow: hidden;
   position: relative;
@@ -67,7 +72,29 @@ canvas {
 input[type=color] {
   display: none;
 }
+
+/* Mobile: stack buttons and fill width */
+@media (max-width: 600px) {
+  body {
+    flex-direction: column;
+    justify-content: flex-start; /* container at top */
+    height: auto;
+  }
+  #topButtons, #bottomButtons {
+    flex-direction: column;
+    width: 95%;
+  }
+  #topButtons button, #bottomButtons button {
+    margin: 5px 0;
+  }
+  #container {
+    width: 95%;
+    height: 60vmin;
+    max-height: 400px;
+  }
+}
 </style>
+
 </head>
 <body>
 
