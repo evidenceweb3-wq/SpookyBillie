@@ -48,7 +48,7 @@ canvas {
 #randomBtn { right: 10px; }
 #leavesBtn { left: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
 
-/* Controls container: DESKTOP */
+/* Controls container */
 .controls {
   display: flex;
   flex-wrap: nowrap;
@@ -79,65 +79,63 @@ canvas {
 #save {
   background: green;
   color: white;
-  flex: 1;
+  flex: 1; /* desktop equal width */
 }
 
-/* MOBILE LAYOUT */
+/* MOBILE FIX */
 @media(max-width:768px){
   #container {
     width: 100vw;
-    height: 100vw; /* square */
+    height: 100vw; /* always square */
   }
 
   .controls {
-    display: flex;
     flex-direction: column;
-    width: 95%;
+    width: 95%; /* space from edges */
+    height: calc(100vh - 100vw); /* remaining vertical space */
     margin: 0 auto;
-    gap: 5px;
-    flex-grow: 1;
-    padding-bottom: 5px;
+    padding: 5px;
     box-sizing: border-box;
+    justify-content: space-between;
   }
 
-  /* Top row: Background + Billie Color horizontal */
+  /* Top row: Background + Billie Color side by side */
   .controls .top-row {
     display: flex;
     gap: 5px;
-    width: 100%;
+    height: calc((100% - 3*5px)/4);
   }
-  .controls .top-row button {
+  .controls .top-row button,
+  .controls .top-row input[type="color"] {
     flex: 1;
-    height: 50px;
+    height: 100%;
   }
 
-  /* Scene button full width */
+  /* Scene button row */
   #sceneBtn {
-    width: 100%;
-    height: 50px;
+    height: calc((100% - 3*5px)/4);
+    margin: 5px 0;
   }
 
-  /* Middle row: Horn/Hat/Glasses horizontal */
+  /* Middle row: Horn + Hat + Glasses horizontal */
   .controls .middle-row {
     display: flex;
     gap: 5px;
-    width: 100%;
+    height: calc((100% - 3*5px)/4);
   }
   .controls .middle-row button {
-    flex: 1; /* three buttons share row equally */
-    height: 50px;
+    flex: 1;
+    height: 100%;
   }
 
-  /* Save button full width */
+  /* Save button row */
   #save {
-    width: 100%;
-    height: 50px;
+    height: calc((100% - 3*5px)/4);
     margin-top: 5px;
   }
 }
 </style>
-</head>
-<body>
+
 <div id="container">
   <canvas id="canvas"></canvas>
   <button id="randomBtn">🎲 Random</button>
@@ -145,7 +143,7 @@ canvas {
 </div>
 
 <div class="controls">
-  <!-- Top row: Background + Billie Color -->
+  <!-- Top row for Background + Billie Color -->
   <div class="top-row">
     <button id="bgButton">Background</button>
     <input type="color" id="bgColor" value="#ffffff" style="display:none;">
@@ -153,17 +151,17 @@ canvas {
     <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
   </div>
 
-  <!-- Scene button full width -->
+  <!-- Scene button -->
   <button id="sceneBtn">🎬 Scene</button>
 
-  <!-- Middle row: Horn + Hat + Glasses -->
+  <!-- Middle row Horn/Hat/Glasses -->
   <div class="middle-row">
     <button id="swapHorn">Horn</button>
     <button id="swapHat">Hat</button>
     <button id="swapMask">Glasses</button>
   </div>
 
-  <!-- Save button full width -->
+  <!-- Save button -->
   <button id="save">Save PNG</button>
 </div>
 
