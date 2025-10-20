@@ -22,7 +22,7 @@ body {
   justify-content: center;
   position: relative;
   width: 90vmin;
-  height: 90vmin; /* square */
+  height: 90vmin; /* always square */
   overflow: hidden;
   margin: 0 auto;
 }
@@ -86,20 +86,21 @@ canvas {
 @media(max-width:768px){
   #container {
     width: 100vw;
-    height: 100vw; /* always square */
+    height: 100vw; /* square container */
   }
 
   .controls {
     flex-direction: column;
     flex-wrap: nowrap;
     width: 100%;
-    height: calc(100vh - 100vw); /* fill remaining vertical space */
+    height: calc(100vh - 100vw); /* remaining space */
     margin: 0;
-    padding: 5px;
+    padding: 0;
     box-sizing: border-box;
+    justify-content: space-between; /* evenly distribute rows */
   }
 
-  /* Calculate button height to fit all without scrolling */
+  /* Total rows: top-row, middle-row, scene, save */
   .controls .top-row,
   .controls .middle-row,
   #sceneBtn,
@@ -108,38 +109,45 @@ canvas {
     gap: 5px;
   }
 
-  /* Top row: Background + Billie Color */
+  /* Calculate row height to fit perfectly */
+  .controls .top-row,
+  .controls .middle-row,
+  #sceneBtn,
+  #save {
+    height: calc((100% - 15px) / 4); /* 4 sections, 5px gap each */
+  }
+
+  /* Top row buttons: Background + Billie Color */
   .controls .top-row button,
   .controls .top-row input[type="color"] {
     flex: 1;
     font-size: 1em;
     border-radius: 6px;
-    height: calc((100% - 20px) / 5); /* evenly divide vertical space */
   }
 
-  /* Scene button full width */
-  #sceneBtn {
-    height: calc((100% - 20px) / 5);
-    font-size: 1em;
-    border-radius: 6px;
-  }
-
-  /* Middle row: Horn / Hat / Glasses */
+  /* Middle row buttons: Horn / Hat / Glasses */
   .controls .middle-row button {
     flex: 1;
     font-size: 1em;
     border-radius: 6px;
-    height: calc((100% - 20px) / 5);
+  }
+
+  /* Scene button full width */
+  #sceneBtn {
+    flex: 1;
+    font-size: 1em;
+    border-radius: 6px;
   }
 
   /* Save button full width at bottom */
   #save {
-    height: calc((100% - 20px) / 5);
+    flex: 1;
     font-size: 1em;
     border-radius: 6px;
   }
 }
 </style>
+
 
 <div id="container">
   <canvas id="canvas"></canvas>
