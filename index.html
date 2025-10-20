@@ -71,6 +71,9 @@ canvas {
   text-align: center;
   min-width: 0;
   flex: 1; /* fill equally */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Save button special styling */
@@ -96,17 +99,18 @@ canvas {
     box-sizing: border-box;
   }
 
-  /* Top row: Background + Billie Color */
+  /* Top row: Background + Billie Color horizontal */
   .controls .top-row {
     display: flex;
     gap: 5px;
+    flex: 1; /* scale to fill vertical space */
   }
 
-  /* Middle row: Scene + Horn + Hat + Glasses */
+  /* Middle row: Scene + Horn + Hat + Glasses horizontal */
   .controls .middle-row {
     display: flex;
     gap: 5px;
-    flex: 1; /* fill vertical space */
+    flex: 1; /* scale to fill vertical space */
   }
 
   /* Buttons inside rows fill equally */
@@ -118,6 +122,14 @@ canvas {
     border-radius: 8px;
   }
 
+  /* Scene button separate full width */
+  #sceneBtn {
+    flex: 1;
+    font-size: 1.1em;
+    border-radius: 8px;
+    margin: 5px 0;
+  }
+
   /* Save button at bottom full width */
   #save {
     flex: 0 0 auto;
@@ -127,8 +139,6 @@ canvas {
   }
 }
 </style>
-</head>
-<body>
 
 <div id="container">
   <canvas id="canvas"></canvas>
@@ -137,6 +147,7 @@ canvas {
 </div>
 
 <div class="controls">
+  <!-- Top row for Background + Billie Color -->
   <div class="top-row">
     <button id="bgButton">Background</button>
     <input type="color" id="bgColor" value="#ffffff" style="display:none;">
@@ -144,11 +155,17 @@ canvas {
     <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
   </div>
 
+  <!-- Scene button -->
   <button id="sceneBtn">🎬 Scene</button>
-  <button id="swapHorn">Horn</button>
-  <button id="swapHat">Hat</button>
-  <button id="swapMask">Glasses</button>
 
+  <!-- Middle row Horn/Hat/Glasses -->
+  <div class="middle-row">
+    <button id="swapHorn">Horn</button>
+    <button id="swapHat">Hat</button>
+    <button id="swapMask">Glasses</button>
+  </div>
+
+  <!-- Save button -->
   <button id="save">Save PNG</button>
 </div>
 
