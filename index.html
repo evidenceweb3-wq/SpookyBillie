@@ -83,10 +83,6 @@ canvas {
 }
 
 @media(max-width:768px){
-  body {
-    flex-direction: column;
-  }
-
   #container {
     width: 100vw;
     height: 100vw; /* square */
@@ -95,34 +91,37 @@ canvas {
   .controls {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    flex-grow: 1; /* fill remaining space under canvas */
+    width: 95%;
+    margin: 0 auto;
     gap: 5px;
-    margin: 0;
-    padding: 5px;
+    flex-grow: 1; /* fill remaining vertical space */
+    padding-bottom: 5px;
     box-sizing: border-box;
   }
 
-  .controls button,
+  /* All stacked buttons */
+  .controls button:not(.middle-row button),
   .controls input[type="color"] {
-    flex: 1; /* stretch vertically */
-    width: 100%; /* fill container width */
+    width: 100%;
+    flex: 1;
+    height: 50px;
   }
 
-  /* Wrap Horn/Hat/Glasses in a horizontal row */
+  /* Horn/Hat/Glasses horizontal row */
   .controls .middle-row {
     display: flex;
     gap: 5px;
-    flex: none; /* let height be determined by container */
+    width: 100%;
   }
-
   .controls .middle-row button {
     flex: 1; /* three buttons share row equally */
-    width: auto;
+    height: 50px;
   }
 
+  /* Save button full width */
   #save {
     width: 100%;
+    height: 50px;
     margin-top: 5px;
   }
 }
