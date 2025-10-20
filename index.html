@@ -11,7 +11,7 @@ body {
   flex-direction: column;
   margin: 0;
   font-family: sans-serif;
-  height: 100vh; /* full viewport */
+  height: 100vh;
 }
 
 #container {
@@ -22,7 +22,7 @@ body {
   justify-content: center;
   position: relative;
   width: 90vmin;
-  height: 90vmin; /* always square */
+  height: 90vmin; /* square */
   overflow: hidden;
   margin: 0 auto;
 }
@@ -48,22 +48,19 @@ canvas {
 #randomBtn { right: 10px; }
 #leavesBtn { left: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
 
+/* Controls container */
 .controls {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   width: 90vmin;
   margin: 10px auto 0 auto;
-  gap: 4px;
+  gap: 6px;
+  justify-content: space-between;
 }
 
-.controls .top-row {
-  display: flex;
-  gap: 4px;
-}
-
+/* All buttons */
 .controls button,
 .controls input[type="color"] {
-  flex: 1 1 auto;
   padding: 10px;
   font-weight: bold;
   border-radius: 6px;
@@ -72,42 +69,61 @@ canvas {
   color: black;
   cursor: pointer;
   text-align: center;
+  min-width: 0;
+  flex: 1; /* fill equally */
+}
+
+/* Save button special styling */
+#save {
+  background: green;
+  color: white;
 }
 
 /* MOBILE FIX */
 @media(max-width:768px){
   #container {
     width: 100vw;
-    height: 100vw; /* square */
+    height: 100vw; /* always square */
   }
 
   .controls {
-    flex: 1;
-    height: calc(100vh - 100vw); /* remaining space below container */
-    margin: 0;
     flex-direction: column;
-    justify-content: space-between; /* evenly space buttons */
+    flex-wrap: nowrap;
+    width: 100%;
+    height: calc(100vh - 100vw); /* fill remaining vertical space */
+    margin: 0;
     padding: 5px;
     box-sizing: border-box;
-    gap: 2px;
   }
 
+  /* Top row: Background + Billie Color */
   .controls .top-row {
-    flex-direction: row;
+    display: flex;
+    gap: 5px;
   }
 
-  .controls button,
-  .controls input[type="color"] {
+  /* Middle row: Scene + Horn + Hat + Glasses */
+  .controls .middle-row {
+    display: flex;
+    gap: 5px;
+    flex: 1; /* fill vertical space */
+  }
+
+  /* Buttons inside rows fill equally */
+  .controls .top-row button,
+  .controls .top-row input[type="color"],
+  .controls .middle-row button {
     flex: 1;
-    width: 100%;
-    margin: 2px 0; /* space between buttons */
-    font-size: 1.2em;
+    font-size: 1.1em;
     border-radius: 8px;
   }
 
+  /* Save button at bottom full width */
   #save {
-    background: green;
-    color: white;
+    flex: 0 0 auto;
+    font-size: 1.2em;
+    border-radius: 8px;
+    margin-top: 5px;
   }
 }
 </style>
