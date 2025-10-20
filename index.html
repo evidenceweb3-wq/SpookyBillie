@@ -48,7 +48,7 @@ canvas {
 #randomBtn { right: 10px; }
 #leavesBtn { left: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
 
-/* Controls container */
+/* Controls container: DESKTOP */
 .controls {
   display: flex;
   flex-wrap: nowrap;
@@ -79,59 +79,30 @@ canvas {
 #save {
   background: green;
   color: white;
-  flex: 1; /* desktop equal width */
+  flex: 1;
 }
 
 /* MOBILE FIX */
 @media(max-width:768px){
-  #container {
-    width: 100vw;
-    height: 100vw; /* always square */
-  }
-
   .controls {
-    flex-direction: column;
-    width: 95%; /* space from edges */
-    height: calc(100vh - 100vw); /* remaining vertical space */
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 95%;
     margin: 0 auto;
-    padding: 5px;
-    box-sizing: border-box;
-    justify-content: space-between;
-  }
-
-  /* Top row: Background + Billie Color side by side */
-  .controls .top-row {
-    display: flex;
     gap: 5px;
-    height: calc((100% - 3*5px)/4);
   }
-  .controls .top-row button,
-  .controls .top-row input[type="color"] {
-    flex: 1;
-    height: 100%;
+  .controls button,
+  .controls input[type="color"] {
+    flex: 1 1 calc(50% - 5px); /* two per row by default */
+    height: 50px; /* short height to prevent scrolling */
   }
-
-  /* Scene button row */
-  #sceneBtn {
-    height: calc((100% - 3*5px)/4);
-    margin: 5px 0;
+  /* Horn, Hat, Glasses horizontal */
+  #swapHorn, #swapHat, #swapMask {
+    flex: 1 1 calc(33.33% - 5px);
   }
-
-  /* Middle row: Horn + Hat + Glasses horizontal */
-  .controls .middle-row {
-    display: flex;
-    gap: 5px;
-    height: calc((100% - 3*5px)/4);
-  }
-  .controls .middle-row button {
-    flex: 1;
-    height: 100%;
-  }
-
-  /* Save button row */
   #save {
-    height: calc((100% - 3*5px)/4);
-    margin-top: 5px;
+    flex: 1 1 100%;
+    height: 50px;
   }
 }
 </style>
@@ -143,25 +114,14 @@ canvas {
 </div>
 
 <div class="controls">
-  <!-- Top row for Background + Billie Color -->
-  <div class="top-row">
-    <button id="bgButton">Background</button>
-    <input type="color" id="bgColor" value="#ffffff" style="display:none;">
-    <button id="colorMaskButton">Billie Color</button>
-    <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
-  </div>
-
-  <!-- Scene button -->
+  <button id="bgButton">Background</button>
+  <input type="color" id="bgColor" value="#ffffff" style="display:none;">
+  <button id="colorMaskButton">Billie Color</button>
+  <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
   <button id="sceneBtn">🎬 Scene</button>
-
-  <!-- Middle row Horn/Hat/Glasses -->
-  <div class="middle-row">
-    <button id="swapHorn">Horn</button>
-    <button id="swapHat">Hat</button>
-    <button id="swapMask">Glasses</button>
-  </div>
-
-  <!-- Save button -->
+  <button id="swapHorn">Horn</button>
+  <button id="swapHat">Hat</button>
+  <button id="swapMask">Glasses</button>
   <button id="save">Save PNG</button>
 </div>
 
