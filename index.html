@@ -57,16 +57,15 @@ canvas {
   margin: 10px auto 0 auto;
 }
 
-/* Toolbar: all buttons in one row on desktop */
-.toolbar {
+/* Rows */
+.row {
   display: flex;
-  flex-wrap: nowrap;
   gap: 6px;
-  width: 100%;
 }
 
-.toolbar button,
-.toolbar input[type="color"] {
+/* All buttons */
+button,
+input[type="color"] {
   flex: 1;
   padding: 10px;
   font-weight: bold;
@@ -80,7 +79,7 @@ canvas {
   justify-content: center;
 }
 
-/* Save button styling */
+/* Save button */
 #save {
   background: green;
   color: white;
@@ -89,12 +88,12 @@ canvas {
   font-weight: bold;
   cursor: pointer;
   text-align: center;
-  width: 100%;
   max-width: 500px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
+  width: auto; /* default desktop width auto */
 }
 
 /* MOBILE */
@@ -104,18 +103,30 @@ canvas {
     height: 100vw; /* always square */
   }
 
-  .toolbar {
-    flex-direction: column;
+  /* Background + Billie Color horizontal on mobile */
+  .row.bg-row {
+    flex-direction: row;
+  }
+  .row.bg-row button,
+  .row.bg-row input[type="color"] {
+    height: 50px;
   }
 
-  .toolbar button,
-  .toolbar input[type="color"],
+  /* Horn / Hat / Glasses horizontal on mobile */
+  .row.hats-row {
+    flex-direction: row;
+  }
+  .row.hats-row button {
+    height: 50px;
+  }
+
   #sceneBtn {
-    height: 50px; /* uniform height on mobile */
+    height: 50px;
   }
 
+  /* Save PNG full width on desktop only (keep on mobile default) */
   #save {
-    height: 60px; /* bigger Save PNG */
+    width: 100%;
   }
 }
 </style>
@@ -128,16 +139,25 @@ canvas {
 </div>
 
 <div class="controls">
-  <div class="toolbar">
+  <!-- Background + Billie Color row -->
+  <div class="row bg-row">
     <button id="bgButton">Background</button>
     <input type="color" id="bgColor" value="#ffffff" style="display:none;">
     <button id="colorMaskButton">Billie Color</button>
     <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
-    <button id="sceneBtn">🎬 Scene</button>
+  </div>
+
+  <!-- Scene button -->
+  <button id="sceneBtn">🎬 Scene</button>
+
+  <!-- Horn/Hat/Glasses row -->
+  <div class="row hats-row">
     <button id="swapHorn">Horn</button>
     <button id="swapHat">Hat</button>
     <button id="swapMask">Glasses</button>
   </div>
+
+  <!-- Save PNG -->
   <button id="save">Save PNG</button>
 </div>
 
