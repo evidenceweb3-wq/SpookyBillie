@@ -69,7 +69,7 @@ canvas {
   color: black;
   cursor: pointer;
   text-align: center;
-  flex: 1; /* fill equally on desktop */
+  flex: 1; /* desktop: fill equally */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,7 +79,7 @@ canvas {
 #save {
   background: green;
   color: white;
-  flex: 1; /* desktop equal height */
+  flex: 1; /* desktop equal width */
 }
 
 /* MOBILE FIX */
@@ -99,19 +99,11 @@ canvas {
     justify-content: space-between;
   }
 
-  /* Calculate each row height to fit all buttons without scrolling */
-  .controls button,
-  .controls input[type="color"] {
-    font-size: 1em;
-    border-radius: 8px;
-    flex: none;
-  }
-
   /* Top row: Background + Billie Color side by side */
   .controls .top-row {
     display: flex;
     gap: 5px;
-    height: calc((100% - 10px*3)/4); /* 4 rows, 3 gaps */
+    height: calc((100% - 3*5px)/4);
   }
   .controls .top-row button,
   .controls .top-row input[type="color"] {
@@ -121,7 +113,7 @@ canvas {
 
   /* Scene button row */
   #sceneBtn {
-    height: calc((100% - 10px*3)/4);
+    height: calc((100% - 3*5px)/4);
     margin: 5px 0;
   }
 
@@ -129,16 +121,16 @@ canvas {
   .controls .middle-row {
     display: flex;
     gap: 5px;
-    height: calc((100% - 10px*3)/4);
+    height: calc((100% - 3*5px)/4);
   }
   .controls .middle-row button {
     flex: 1;
     height: 100%;
   }
 
-  /* Save button full width row */
+  /* Save button row */
   #save {
-    height: calc((100% - 10px*3)/4);
+    height: calc((100% - 3*5px)/4);
     margin-top: 5px;
   }
 }
