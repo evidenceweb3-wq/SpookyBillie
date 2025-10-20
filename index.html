@@ -51,15 +51,23 @@ canvas {
 /* CONTROLS */
 .controls {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 6px;
   width: 90vmin;
   margin: 10px auto 0 auto;
-  gap: 6px;
 }
 
-/* All buttons */
-.controls button,
-.controls input[type="color"] {
+/* Toolbar: all buttons in one row on desktop */
+.toolbar {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  width: 100%;
+}
+
+.toolbar button,
+.toolbar input[type="color"] {
+  flex: 1;
   padding: 10px;
   font-weight: bold;
   border-radius: 6px;
@@ -67,58 +75,52 @@ canvas {
   background: white;
   color: black;
   cursor: pointer;
-  text-align: center;
-  flex: 1 1 auto; /* desktop: fill equally */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Save button special styling */
+/* Save button styling */
 #save {
   background: green;
   color: white;
-  flex: 1 1 auto; /* desktop equal width */
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 }
 
-/* MOBILE FIX */
+/* MOBILE */
 @media(max-width:768px){
   #container {
     width: 100vw;
     height: 100vw; /* always square */
   }
 
-  .controls {
+  .toolbar {
     flex-direction: column;
-    width: 95%;
-    height: calc(100vh - 100vw);
-    margin: 0 auto;
-    padding: 5px 0;
-    box-sizing: border-box;
   }
 
-  .controls .row {
-    display: flex;
-    width: 100%;
-    gap: 5px;
+  .toolbar button,
+  .toolbar input[type="color"],
+  #sceneBtn {
+    height: 50px; /* uniform height on mobile */
   }
 
-  .controls .row button,
-  .controls .row input[type="color"],
-  #sceneBtn,
   #save {
-    flex: 1;           /* make all buttons same height */
-    height: 50px;      /* uniform height */
-  }
-
-  /* Add spacing between rows */
-  .controls .row + .row,
-  .controls button + button {
-    margin-top: 5px;
+    height: 60px; /* bigger Save PNG */
   }
 }
 </style>
-
+</head>
+<body>
 <div id="container">
   <canvas id="canvas"></canvas>
   <button id="randomBtn">🎲 Random</button>
@@ -126,25 +128,16 @@ canvas {
 </div>
 
 <div class="controls">
-  <!-- Top row: Background + Billie Color -->
-  <div class="row">
+  <div class="toolbar">
     <button id="bgButton">Background</button>
     <input type="color" id="bgColor" value="#ffffff" style="display:none;">
     <button id="colorMaskButton">Billie Color</button>
     <input type="color" id="colorMask" value="#ffcc99" style="display:none;">
-  </div>
-
-  <!-- Scene row -->
-  <button id="sceneBtn">🎬 Scene</button>
-
-  <!-- Middle row: Horn/Hat/Glasses -->
-  <div class="row">
+    <button id="sceneBtn">🎬 Scene</button>
     <button id="swapHorn">Horn</button>
     <button id="swapHat">Hat</button>
     <button id="swapMask">Glasses</button>
   </div>
-
-  <!-- Save row -->
   <button id="save">Save PNG</button>
 </div>
 
