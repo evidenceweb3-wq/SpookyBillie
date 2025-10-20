@@ -82,44 +82,46 @@ canvas {
   flex: 1;
 }
 
-/* MOBILE FIX */
 @media(max-width:768px){
   body {
     flex-direction: column;
   }
+
   #container {
     width: 100vw;
     height: 100vw; /* square */
   }
+
   .controls {
     display: flex;
     flex-direction: column;
     width: 100%;
-    flex-grow: 1; /* fill remaining space */
+    flex-grow: 1; /* fill remaining space under canvas */
     gap: 5px;
     margin: 0;
     padding: 5px;
     box-sizing: border-box;
-    justify-content: space-between;
   }
+
   .controls button,
   .controls input[type="color"] {
     flex: 1; /* stretch vertically */
     width: 100%; /* fill container width */
   }
 
-  /* Horn, Hat, Glasses horizontal row */
-  #swapHorn, #swapHat, #swapMask {
-    flex: 1;
-    width: 32%; /* three buttons in one row */
-    margin-right: 1%;
+  /* Wrap Horn/Hat/Glasses in a horizontal row */
+  .controls .middle-row {
+    display: flex;
+    gap: 5px;
+    flex: none; /* let height be determined by container */
   }
-  #swapMask {
-    margin-right: 0; /* last button no margin */
+
+  .controls .middle-row button {
+    flex: 1; /* three buttons share row equally */
+    width: auto;
   }
 
   #save {
-    flex: 1;
     width: 100%;
     margin-top: 5px;
   }
