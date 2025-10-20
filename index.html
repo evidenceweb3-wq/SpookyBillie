@@ -84,25 +84,44 @@ canvas {
 
 /* MOBILE FIX */
 @media(max-width:768px){
+  body {
+    flex-direction: column;
+  }
+  #container {
+    width: 100vw;
+    height: 100vw; /* square */
+  }
   .controls {
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 95%;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex-grow: 1; /* fill remaining space */
     gap: 5px;
+    margin: 0;
+    padding: 5px;
+    box-sizing: border-box;
+    justify-content: space-between;
   }
   .controls button,
   .controls input[type="color"] {
-    flex: 1 1 calc(50% - 5px); /* two per row by default */
-    height: 50px; /* short height to prevent scrolling */
+    flex: 1; /* stretch vertically */
+    width: 100%; /* fill container width */
   }
-  /* Horn, Hat, Glasses horizontal */
+
+  /* Horn, Hat, Glasses horizontal row */
   #swapHorn, #swapHat, #swapMask {
-    flex: 1 1 calc(33.33% - 5px);
+    flex: 1;
+    width: 32%; /* three buttons in one row */
+    margin-right: 1%;
   }
+  #swapMask {
+    margin-right: 0; /* last button no margin */
+  }
+
   #save {
-    flex: 1 1 100%;
-    height: 50px;
+    flex: 1;
+    width: 100%;
+    margin-top: 5px;
   }
 }
 </style>
