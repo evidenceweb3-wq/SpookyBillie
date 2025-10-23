@@ -164,7 +164,8 @@ const maskSources = [
   "https://i.postimg.cc/j5n4jXCh/SUnglasses-SK-l.png",
   "https://i.postimg.cc/ZqbygLrd/lentes5.png",
   "https://i.postimg.cc/W4dkmwgz/Glass-Blood.png",
-  "https://i.postimg.cc/8cj9N36k/Glass-Cnagel.png"
+  "https://i.postimg.cc/8cj9N36k/Glass-Cnagel.png",
+  "https://i.postimg.cc/rwLZ7SNQ/Monteroni-Lentes.png"
 ];
 const masks = [];
 let currentMask = 0;
@@ -194,7 +195,8 @@ bgLeaves.src = "https://i.postimg.cc/2jqF2p04/Leaves22.png";
 // SCENES
 const sceneSources = [
   "https://i.postimg.cc/132fCVjd/Chat-GPT-Image-8-oct-2025-16-45-48.png",
-  "https://i.postimg.cc/XNTpMmZg/Noche2.png"
+  "https://i.postimg.cc/XNTpMmZg/Noche2.png",
+  "https://i.postimg.cc/y6gksqTm/Fondes-Galone3.png"
 ];
 const sceneImgs = sceneSources.map(src => { const img = new Image(); img.crossOrigin="anonymous"; img.src=src; return img; });
 let currentScene = sceneImgs.length;
@@ -242,12 +244,13 @@ function render(){
   if(showScene && currentScene<sceneImgs.length && sceneImgs[currentScene].complete)
     ctx.drawImage(sceneImgs[currentScene],0,0,naturalW,naturalH);
 
-  if(!(showScene && currentScene===1)){
-    if(bgLeaves.complete) ctx.drawImage(bgLeaves,0,0,naturalW,naturalH);
-    if(showLeaves) drawLeaves();
-  }
+  if (!(showScene && (currentScene === 1 || currentScene === 2))) {
+  if (bgLeaves.complete) ctx.drawImage(bgLeaves, 0, 0, naturalW, naturalH);
+}
+if (showLeaves) drawLeaves();
 
-  const yOffset=(showScene && currentScene===1)?90:0;
+  const yOffset = (showScene && (currentScene === 1 || currentScene === 2)) ? 115 : 0;
+
 
   const skeletesMaskURL="https://i.postimg.cc/SsTT1FSb/Skeletes2.png";
   const skeletesActive=masks[currentMask] && masks[currentMask].src.includes(skeletesMaskURL);
